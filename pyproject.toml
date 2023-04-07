@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "selenium-pytest"
+version = "0.1.0"
+description = ""
+authors = ["Mateusz Stachurzewski"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytest = "^7.2.2"
+selenium = "^4.8.2"
+requests = "^2.28.2"
+Pillow = "^9.4.0"
+pytest-xdist = "^3.2.1"
+Faker = "^18.3.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+markers = [
+    "use_logged_in_user: starts a test with user logged in via API",
+]

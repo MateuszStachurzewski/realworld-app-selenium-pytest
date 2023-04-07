@@ -1,4 +1,6 @@
 .pytest_cache
 __pycache__
 .vscode
-.poetry.lock
+poetry.lock
+.DS_Store
+e2e/screenshots/*
