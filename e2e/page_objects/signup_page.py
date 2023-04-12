@@ -29,7 +29,7 @@ class SignUpPage(Common):
             first_name_field = self.browser.find_element(
                 By.XPATH, '//input[@id="firstName"]'
             )
-            first_name_field.clear()
+            self.clear_input(first_name_field)
             first_name_field.send_keys(first_name)
         except:
             take_screenshot(
@@ -42,7 +42,7 @@ class SignUpPage(Common):
             last_name_field = self.browser.find_element(
                 By.XPATH, '//input[@id="lastName"]'
             )
-            last_name_field.clear()
+            self.clear_input(last_name_field)
             last_name_field.send_keys(last_name)
         except:
             take_screenshot(
@@ -55,7 +55,7 @@ class SignUpPage(Common):
             username_field = self.browser.find_element(
                 By.XPATH, '//input[@id="username"]'
             )
-            username_field.clear()
+            self.clear_input(username_field)
             username_field.send_keys(username)
         except:
             take_screenshot(
@@ -68,7 +68,7 @@ class SignUpPage(Common):
             password_field = self.browser.find_element(
                 By.XPATH, '//input[@id="password"]'
             )
-            password_field.clear()
+            self.clear_input(password_field)
             password_field.send_keys(password)
         except:
             take_screenshot(
@@ -81,7 +81,7 @@ class SignUpPage(Common):
             confirm_password_field = self.browser.find_element(
                 By.XPATH, '//input[@id="confirmPassword"]'
             )
-            confirm_password_field.clear()
+            self.clear_input(confirm_password_field)
             confirm_password_field.send_keys(password)
         except:
             take_screenshot(

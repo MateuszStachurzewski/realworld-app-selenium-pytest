@@ -5,14 +5,13 @@ import pytest
 import requests
 from selenium import webdriver
 
-from e2e.page_objects.bank_accounts_page import BankAccountsPage
-from e2e.page_objects.home_page import HomePage
-from e2e.page_objects.signin_page import SignInPage
-from e2e.page_objects.signup_page import SignUpPage
-from e2e.utils import get_auth_data, take_screenshot
+
+from e2e.utils import take_screenshot
 from faker import Faker
 
 logger = logging.getLogger(__name__)
+
+pytest_plugins = ["fixtures.page_objects", "fixtures.auth"]
 
 
 def pytest_addoption(parser):
@@ -31,6 +30,7 @@ def config():
 
     assert isinstance(config["web_url"], str)
     assert isinstance(config["api_url"], str)
+    assert isinstance(config["password"], str)
 
     return config
 
@@ -84,41 +84,6 @@ def users(config):
     return resp.json().get("results")
 
 
-@pytest.fixture(scope="class")
-def signin_page(browser, config):
-    return SignInPage(browser=browser, web_url=config["web_url"])
-
-
-@pytest.fixture(scope="class")
-def signup_page(browser, config):
-    return SignUpPage(browser=browser, web_url=config["web_url"])
-
-
-@pytest.fixture(scope="class")
-def bank_accounts_page(browser, config):
-    return BankAccountsPage(browser=browser, web_url=config["web_url"])
-
-
-@pytest.fixture(scope="class")
-def home_page(browser, config):
-    return HomePage(browser=browser, web_url=config["web_url"])
-
-
 @pytest.fixture(scope="session")
 def faker():
     return Faker()
-
-
-@pytest.fixture(autouse=True, scope="class")
-def use_logged_in_user(request, browser, users, signin_page):
-    if "use_logged_in_user" in request.keywords:
-        try:
-            auth_cookie, auth_state = pytest.auth_data
-            signin_page.load()
-        except AttributeError:
-            auth_cookie, auth_state = get_auth_data(users, browser, signin_page)
-
-        browser.add_cookie({"name": auth_cookie["name"], "value": auth_cookie["value"]})
-        browser.execute_script(
-            f'return window.localStorage.setItem("authState", {json.dumps(auth_state)})'
-        )

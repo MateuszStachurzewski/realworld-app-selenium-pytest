@@ -4,15 +4,19 @@ from urllib.parse import urlparse
 from e2e.page_objects.common import Common
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-
+import pytest
 from e2e.utils import take_screenshot
 
 logger = logging.getLogger(__name__)
 
 
+@pytest.mark.usefixtures("config")
 class SignInPage(Common):
     PATH = "/signin"
-    PASSWORD = "s3cret"
+
+    def __init__(self, password, **kwargs):
+        super().__init__(**kwargs)
+        self.password = password
 
     def load(self):
         try:
@@ -29,7 +33,7 @@ class SignInPage(Common):
             username_field = self.browser.find_element(
                 By.CSS_SELECTOR, 'div[data-test="signin-username"]'
             ).find_element(By.CSS_SELECTOR, 'input[id="username"]')
-            username_field.clear()
+            self.clear_input(username_field)
             username_field.send_keys(username)
         except:
             take_screenshot(
@@ -39,11 +43,11 @@ class SignInPage(Common):
 
     def enter_password(self, password):
         try:
-            username_field = self.browser.find_element(
+            password_field = self.browser.find_element(
                 By.CSS_SELECTOR, 'div[data-test="signin-password"]'
             ).find_element(By.CSS_SELECTOR, 'input[id="password"]')
-            username_field.clear()
-            username_field.send_keys(password)
+            self.clear_input(password_field)
+            password_field.send_keys(password)
         except:
             take_screenshot(
                 self.browser, "e2e/screenshots/signin", "enter_password.png"
@@ -84,10 +88,17 @@ class SignInPage(Common):
             raise
 
     def sign_in(
-        self, username, password=PASSWORD, remember_me=False, wait_for_redirect=True
+        self,
+        username,
+        password=None,
+        remember_me=False,
+        wait_for_redirect=True,
     ):
+        password = self.password if password is None else password
+
         self.enter_username(username)
         self.enter_password(password)
+
         if remember_me:
             self.check_remember_me()
 

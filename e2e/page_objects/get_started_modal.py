@@ -1,51 +1,19 @@
-import logging
-from urllib.parse import urlparse
-
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
-
 from e2e.page_objects.common import Common
-
+from selenium.webdriver.common.by import By
 from e2e.utils import take_screenshot
 
-logger = logging.getLogger(__name__)
 
-
-class BankAccountsPage(Common):
-    PATH = "/bankaccounts"
-
-    def load(self, new_account_path=""):
+class GetStartedModal(Common):
+    def click_next_on_get_started_modal(self):
         try:
-            current_path = urlparse(self.browser.current_url).path
-            if current_path != self.PATH:
-                logger.info(f"{self.web_url}{self.PATH}")
-                self.browser.get(f"{self.web_url}{self.PATH}{new_account_path}")
-        except TimeoutException:
-            logger.info("Failed to load Bank Accounts Page!")
-            raise
-
-    def click_create_button(self):
-        try:
-            self.wait_for_element(
-                selector=(By.XPATH, '//a[@data-test="bankaccount-new"]')
+            self.browser.find_element(
+                By.XPATH, '//button[@data-test="user-onboarding-next"]'
             ).click()
         except:
             take_screenshot(
-                self.browser, "e2e/screenshots/bank_accounts", "click_create_button.png"
-            )
-            raise
-
-    def click_delete_button(self, el_index):
-        try:
-            self.wait_for_element(
-                selector=(
-                    By.XPATH,
-                    f'//ul[@data-test="bankaccount-list"][{el_index}]//button[@data-test="bankaccount-delete"]',
-                )
-            ).click()
-        except:
-            take_screenshot(
-                self.browser, "e2e/screenshots/bank_accounts", "click_delete_button.png"
+                self.browser,
+                "e2e/screenshots/signup",
+                "click_next_on_get_started_modal.png",
             )
             raise
 
@@ -106,11 +74,20 @@ class BankAccountsPage(Common):
             raise
 
     def create_account(self, bank_name, routing_number, account_number):
-        self.click_create_button()
         self.enter_bank_name(bank_name)
         self.enter_routing_number(routing_number)
         self.enter_account_number(account_number)
         self.submit_create_account_form()
 
-    def delete_first_bank_account(self):
-        self.click_delete_button(el_index=1)
+    def click_done_on_get_started_modal(self):
+        try:
+            self.browser.find_element(
+                By.XPATH, '//button[@data-test="user-onboarding-next"]'
+            ).click()
+        except:
+            take_screenshot(
+                self.browser,
+                "e2e/screenshots/signup",
+                "click_done_on_get_started_modal.png",
+            )
+            raise

@@ -19,3 +19,6 @@ class Common:
 
     def wait_for_condition(self, selector, condition):
         return WebDriverWait(self.browser, 10).until(condition(selector))
+
+    def clear_input(self, element):
+        self.browser.execute_script("arguments[0].value = ''", element)
